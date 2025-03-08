@@ -1,3 +1,26 @@
 [
-    {}
+  {
+    "author": "John",
+    "date": "01/01/2001",
+    "favorite": false,
+    "image": "/images/plankton.webp",
+    "instructions": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy Lorem Ipsum is simply dummy text of the printing and typese",
+    "title": "Title"
+  },
+  {
+    "author": "John 2",
+    "date": "01/01/2001",
+    "favorite": true,
+    "image": "/images/plankton.webp",
+    "instructions": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy Lorem Ipsum is simply dummy text of the printing and typese",
+    "title": "Title 2"
+  },
+  {
+    "author": "John 3",
+    "date": "01/01/2001",
+    "favorite": false,
+    "image": "/images/plankton.webp",
+    "instructions": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy Lorem Ipsum is simply dummy text of the printing and typese",
+    "title": "Title 3"
+  }
 ]

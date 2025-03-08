@@ -22,13 +22,6 @@ export const RecipeForm = () => {
         rows={4}
         variant="standard"
       />
-      <TextField
-        id="instructions"
-        label="Instructions"
-        multiline
-        rows={4}
-        variant="standard"
-      />
       <Box sx={{ display: "flex", width: "100%", justifyContent: "flex-end" }}>
         <Button variant="contained">Save</Button>
       </Box>
