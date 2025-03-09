@@ -6,6 +6,7 @@ import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
 import { Roboto } from "next/font/google";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "../theme";
+import StoreProvider from "./StoreProvider";
 
 const roboto = Roboto({
   weight: ["300", "400", "500", "700"],
@@ -27,21 +28,23 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={roboto.variable}>
-        <AppRouterCacheProvider>
-          <ThemeProvider theme={theme}>
-            <Box>
-              <AppBar position="fixed">
-                <Toolbar sx={{ py: 2 }}>
-                  <Container sx={{ display: "flex" }}>
-                    <Box sx={{ flexGrow: 1 }} />
-                    <SearchBar />
-                  </Container>
-                </Toolbar>
-              </AppBar>
-              <Container sx={{ pt: 11 }}>{children}</Container>
-            </Box>
-          </ThemeProvider>
-        </AppRouterCacheProvider>
+        <StoreProvider>
+          <AppRouterCacheProvider>
+            <ThemeProvider theme={theme}>
+              <Box>
+                <AppBar position="fixed">
+                  <Toolbar sx={{ py: 2 }}>
+                    <Container sx={{ display: "flex" }}>
+                      <Box sx={{ flexGrow: 1 }} />
+                      <SearchBar />
+                    </Container>
+                  </Toolbar>
+                </AppBar>
+                <Container sx={{ pt: 11 }}>{children}</Container>
+              </Box>
+            </ThemeProvider>
+          </AppRouterCacheProvider>
+        </StoreProvider>
       </body>
     </html>
   );

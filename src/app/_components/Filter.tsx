@@ -1,5 +1,7 @@
 "use client";
 
+import { setFilter } from "@/lib/features/recipe/recipeSlice";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import {
   FormControl,
   FormControlLabel,
@@ -9,20 +11,30 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { useState, ChangeEvent } from "react";
+import { ChangeEvent, useMemo } from "react";
 
 export const FILTER_OPTIONS = Object.freeze({
+  all: "All",
   yes: "Yes",
   no: "No",
 });
 
 export const Filter = () => {
-  const [filter, setFilter] = useState<string>("");
+  const filter = useAppSelector((state) => state.recipe.filter);
+  const recipeList = useAppSelector((state) => state.recipe.recipeList);
+  const dispatch = useAppDispatch();
+
+  const hasData = useMemo(() => recipeList.length > 0, [recipeList]);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value = (event.target as HTMLInputElement).value;
-    setFilter((e) => (e.length > 0 && e === value ? "" : value));
+
+    dispatch(setFilter({ filter: value }));
   };
+
+  if (!hasData) {
+    return <></>;
+  }
 
   return (
     <Stack spacing={2}>

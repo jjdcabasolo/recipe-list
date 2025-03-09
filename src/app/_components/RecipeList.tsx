@@ -3,12 +3,48 @@
 import { Add } from "@mui/icons-material";
 import { Box, Divider, Fab, Paper, Typography, Stack } from "@mui/material";
 import { RecipeCard } from "./RecipeCard";
-import recipeList from "@/recipeList.json";
 import { useCallback, useMemo } from "react";
 import { redirect } from "next/navigation";
+import { useAppSelector } from "@/lib/hooks";
+import { SORT_OPTIONS } from "./SortByTitle";
+import { FILTER_OPTIONS } from "./Filter";
 
 export const RecipeList = () => {
-  const hasData = useMemo(() => recipeList.length > 0, []);
+  const recipeList = useAppSelector((state) => state.recipe.recipeList);
+  const sort = useAppSelector((state) => state.recipe.sort);
+  const filter = useAppSelector((state) => state.recipe.filter);
+  const hasData = useMemo(() => recipeList.length > 0, [recipeList]);
+
+  const recipeListToDisplay = useMemo(() => {
+    let recipeListCopy = [...recipeList];
+
+    switch (filter) {
+      case FILTER_OPTIONS.yes:
+        recipeListCopy = [...recipeListCopy.filter((e) => e.favorite)];
+        break;
+      case FILTER_OPTIONS.no:
+        recipeListCopy = [...recipeListCopy.filter((e) => !e.favorite)];
+        break;
+      case FILTER_OPTIONS.all:
+      default:
+        recipeListCopy = [...recipeListCopy];
+        break;
+    }
+
+    switch (sort) {
+      case SORT_OPTIONS.asc:
+        return [
+          ...recipeListCopy.sort((a, b) => a.title.localeCompare(b.title)),
+        ];
+      case SORT_OPTIONS.desc:
+        return [
+          ...recipeListCopy.sort((a, b) => b.title.localeCompare(a.title)),
+        ];
+      case SORT_OPTIONS.none:
+      default:
+        return [...recipeListCopy];
+    }
+  }, [sort, recipeList, filter]);
 
   const handleRedirect = useCallback(() => {
     redirect("/add");
@@ -26,9 +62,9 @@ export const RecipeList = () => {
           width: "100%",
         })}
       >
-        <Stack spacing={3}>
+        <Stack spacing={3} sx={{ height: "100%" }}>
           {hasData ? (
-            recipeList.map((e, i) => (
+            recipeListToDisplay.map((e, i) => (
               <Stack spacing={3} key={e.title}>
                 <RecipeCard
                   author={e.author}
@@ -38,7 +74,11 @@ export const RecipeList = () => {
                   instructions={e.instructions}
                   title={e.title}
                 />
-                {recipeList.length > i + 1 && <Divider variant="fullWidth" />}
+                {recipeList.length > i + 1 ? (
+                  <Divider variant="fullWidth" />
+                ) : (
+                  <Box />
+                )}
               </Stack>
             ))
           ) : (

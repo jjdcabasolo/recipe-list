@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import {
   Box,
   Button,
@@ -14,6 +14,9 @@ import {
 } from "@mui/material";
 import Image from "next/image";
 import { Star } from "@mui/icons-material";
+import type { RecipeCardType } from "@/types";
+import { useAppDispatch } from "@/lib/hooks";
+import { updateRecipe } from "@/lib/features/recipe/recipeSlice";
 
 const MONTH_NAMES = Object.freeze([
   "January",
@@ -37,15 +40,9 @@ export const RecipeCard = ({
   image,
   instructions,
   title,
-}: Readonly<{
-  author: string;
-  date: string;
-  favorite: boolean;
-  image: string;
-  instructions: string;
-  title: string;
-}>) => {
+}: Readonly<RecipeCardType>) => {
   const theme = useTheme();
+  const dispatch = useAppDispatch();
 
   const formattedDate = useMemo(() => {
     const dateObj = new Date(date);
@@ -58,6 +55,17 @@ export const RecipeCard = ({
       MONTH_NAMES[dateObj.getMonth()]
     } ${dateObj.getDate()}, ${dateObj.getFullYear()}`;
   }, [date]);
+
+  const handleFavoriteClick = useCallback(() => {
+    dispatch(
+      updateRecipe({
+        id: title,
+        updatedRecipe: {
+          favorite: !favorite,
+        },
+      })
+    );
+  }, [dispatch, favorite, title]);
 
   return (
     <Card
@@ -83,6 +91,7 @@ export const RecipeCard = ({
           <IconButton
             color={favorite ? "warning" : "default"}
             sx={{ position: "absolute", top: 8, right: 8 }}
+            onClick={() => handleFavoriteClick()}
           >
             <Star />
           </IconButton>

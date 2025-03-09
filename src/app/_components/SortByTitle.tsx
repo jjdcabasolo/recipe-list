@@ -1,5 +1,7 @@
 "use client";
 
+import { setSort } from "@/lib/features/recipe/recipeSlice";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import {
   Box,
   FormControl,
@@ -9,7 +11,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { useMemo } from "react";
 
 export const SORT_OPTIONS = Object.freeze({
   none: "",
@@ -18,11 +20,19 @@ export const SORT_OPTIONS = Object.freeze({
 });
 
 export const SortByTitle = () => {
-  const [sort, setSort] = useState<string>(SORT_OPTIONS.none);
+  const sort = useAppSelector((state) => state.recipe.sort);
+  const recipeList = useAppSelector((state) => state.recipe.recipeList);
+  const dispatch = useAppDispatch();
+
+  const hasData = useMemo(() => recipeList.length > 0, [recipeList]);
 
   const handleChange = (event: SelectChangeEvent) => {
-    setSort(event.target.value);
+    dispatch(setSort({ sort: event.target.value }));
   };
+
+  if (!hasData) {
+    return <></>;
+  }
 
   return (
     <Stack spacing={2}>
