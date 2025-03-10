@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, FormHelperText } from "@mui/material";
+import { Box, FormHelperText, useTheme } from "@mui/material";
 import Image from "next/image";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { RecipeFormType } from "@/types";
@@ -9,18 +9,22 @@ import { useAppDispatch } from "@/lib/hooks";
 import { uploadImageThunk } from "@/lib/features/recipe/recipeSlice";
 
 export const ImagePicker = ({
-  addRecipeForm,
+  recipeForm,
 }: Readonly<{
-  addRecipeForm: UseFormReturn<RecipeFormType>;
+  recipeForm: UseFormReturn<RecipeFormType>;
 }>) => {
+  const theme = useTheme()
   const {
     register,
     formState: { errors },
     setValue,
-  } = addRecipeForm;
+    getValues,
+  } = recipeForm;
   const dispatch = useAppDispatch();
+
   const inputFile = useRef<HTMLInputElement>(null);
-  const [uploadedFilePath, setUploadedFile] = useState<string>("");
+
+  const [uploadedFilePath, setUploadedFile] = useState<string>(getValues("image"));
 
   const handleClick = () => {
     if (inputFile.current) {
@@ -61,7 +65,7 @@ export const ImagePicker = ({
           alt="Image picker icon"
           width="400"
           height="200"
-          style={{ objectFit: "cover", width: "inherit", aspectRatio: 3 / 4 }}
+          style={{ objectFit: "cover", width: "inherit", aspectRatio: 3 / 4, borderRadius:`${theme.shape.borderRadius * 2}px` }}
         />
       ) : (
         <Image
@@ -69,7 +73,7 @@ export const ImagePicker = ({
           alt="Image picker icon"
           width="400"
           height="200"
-          style={{ objectFit: "cover", width: "inherit", aspectRatio: 3 / 4 }}
+          style={{ objectFit: "cover", width: "inherit", aspectRatio: 3 / 4, borderRadius:`${theme.shape.borderRadius * 2}px` }}
         />
       )}
       <input

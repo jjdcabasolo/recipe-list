@@ -7,7 +7,7 @@ import { ImagePicker } from "./_components/ImagePicker";
 import { useForm } from "react-hook-form";
 import { RecipeFormType } from "@/types";
 
-const defaultValues: RecipeFormType = {
+export const defaultValues: RecipeFormType = {
   author: "",
   email: "",
   title: "",
@@ -16,7 +16,7 @@ const defaultValues: RecipeFormType = {
 };
 
 export default function AddPage() {
-  const addRecipeForm = useForm({
+  const recipeForm = useForm({
     defaultValues,
   });
 
@@ -25,11 +25,11 @@ export default function AddPage() {
       <Grid2 size={{ xs: 12, md: 3 }} sx={{ py: 3 }}>
         <Stack spacing={2}>
           <BackButton />
-          <ImagePicker addRecipeForm={addRecipeForm} />
+          <ImagePicker recipeForm={recipeForm} />
         </Stack>
       </Grid2>
       <Grid2 size={{ xs: 12, md: 9 }} sx={{ py: 3 }}>
-        <RecipeForm addRecipeForm={addRecipeForm} />
+        <RecipeForm recipeForm={recipeForm} mode="add" />
       </Grid2>
     </Grid2>
   );

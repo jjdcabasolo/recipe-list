@@ -7,6 +7,7 @@ import { Roboto } from "next/font/google";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "../theme";
 import StoreProvider from "./StoreProvider";
+import { RecipeSnackbar } from "./_components/RecipeSnackbar";
 
 const roboto = Roboto({
   weight: ["300", "400", "500", "700"],
@@ -42,6 +43,7 @@ export default function RootLayout({
                 </AppBar>
                 <Container sx={{ pt: 11 }}>{children}</Container>
               </Box>
+              <RecipeSnackbar />
             </ThemeProvider>
           </AppRouterCacheProvider>
         </StoreProvider>

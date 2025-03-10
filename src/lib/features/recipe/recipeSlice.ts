@@ -5,14 +5,18 @@ import type { RecipeCardType } from "@/types";
 export const uploadImageThunk = createAsyncThunk(
   "recipe/uploadImage",
   async (formData: FormData) => {
-    const response = await fetch("/api/upload", {
-      method: "POST",
-      body: formData,
-    });
+    try {
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
 
-    const res = await response.json();
+      const res = await response.json();
 
-    return res;
+      return res;
+    } catch (e) {
+      return e;
+    }
   }
 );
 
@@ -20,12 +24,14 @@ interface RecipeState {
   filter: string;
   recipeList: RecipeCardType[];
   sort: string;
+  updateId: string;
 }
 
 const initialState: RecipeState = {
   filter: "",
   recipeList: [],
   sort: "",
+  updateId: "",
 };
 
 export const recipeSlice = createSlice({
@@ -78,18 +84,21 @@ export const recipeSlice = createSlice({
       state.sort = action.payload.sort;
     },
     setFilter: (state, action: PayloadAction<{ filter: string }>) => {
-      state.filter =
-        state.filter.length > 0 && state.filter === action.payload.filter
-          ? ""
-          : action.payload.filter;
+      state.filter = action.payload.filter;
     },
-  },
-  extraReducers: (builder) => {
-    builder.addCase(uploadImageThunk.fulfilled, () => {});
+    setUpdateId: (state, action: PayloadAction<{ updateId: string }>) => {
+      state.updateId = action.payload.updateId;
+    },
   },
 });
 
-export const { addRecipe, updateRecipe, deleteRecipe, setSort, setFilter } =
-  recipeSlice.actions;
+export const {
+  addRecipe,
+  updateRecipe,
+  deleteRecipe,
+  setSort,
+  setFilter,
+  setUpdateId,
+} = recipeSlice.actions;
 
 export default recipeSlice.reducer;

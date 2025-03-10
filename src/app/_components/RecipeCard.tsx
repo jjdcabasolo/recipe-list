@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo } from "react";
+import { SyntheticEvent, useCallback, useMemo } from "react";
 import {
   Box,
   Button,
@@ -16,7 +16,8 @@ import Image from "next/image";
 import { Star } from "@mui/icons-material";
 import type { RecipeCardType } from "@/types";
 import { useAppDispatch } from "@/lib/hooks";
-import { updateRecipe } from "@/lib/features/recipe/recipeSlice";
+import { setUpdateId, updateRecipe } from "@/lib/features/recipe/recipeSlice";
+import { redirect } from "next/navigation";
 
 const MONTH_NAMES = Object.freeze([
   "January",
@@ -40,7 +41,12 @@ export const RecipeCard = ({
   image,
   instructions,
   title,
-}: Readonly<RecipeCardType>) => {
+}: Readonly<
+  Pick<
+    RecipeCardType,
+    "author" | "date" | "favorite" | "image" | "instructions" | "title"
+  >
+>) => {
   const theme = useTheme();
   const dispatch = useAppDispatch();
 
@@ -56,23 +62,40 @@ export const RecipeCard = ({
     } ${dateObj.getDate()}, ${dateObj.getFullYear()}`;
   }, [date]);
 
-  const handleFavoriteClick = useCallback(() => {
-    dispatch(
-      updateRecipe({
-        id: title,
-        updatedRecipe: {
-          favorite: !favorite,
-        },
-      })
-    );
-  }, [dispatch, favorite, title]);
+  const handleCardClick = useCallback(
+    (e: SyntheticEvent) => {
+      e.stopPropagation();
+
+      dispatch(setUpdateId({ updateId: title }));
+      redirect("/update");
+    },
+    [title, dispatch]
+  );
+
+  const handleFavoriteClick = useCallback(
+    (e: SyntheticEvent) => {
+      e.stopPropagation();
+
+      dispatch(
+        updateRecipe({
+          id: title,
+          updatedRecipe: {
+            favorite: !favorite,
+          },
+        })
+      );
+    },
+    [dispatch, favorite, title]
+  );
 
   return (
     <Card
       sx={{
         display: "flex",
         borderRadius: `${theme.shape.borderRadius * 2}px`,
+        cursor: "pointer",
       }}
+      onClick={handleCardClick}
     >
       <CardMedia title={title}>
         <div style={{ position: "relative", width: "300px", height: "225px" }}>
@@ -91,13 +114,13 @@ export const RecipeCard = ({
           <IconButton
             color={favorite ? "warning" : "default"}
             sx={{ position: "absolute", top: 8, right: 8 }}
-            onClick={() => handleFavoriteClick()}
+            onClick={handleFavoriteClick}
           >
             <Star />
           </IconButton>
         </div>
       </CardMedia>
-      <Box sx={{ display: "flex", flexDirection: "column" }}>
+      <Box sx={{ display: "flex", flexDirection: "column", widhh: "100%" }}>
         <CardContent sx={{ flex: "1 0 auto" }}>
           <Typography variant="h5">{title}</Typography>
           <Typography variant="subtitle2">{instructions}</Typography>

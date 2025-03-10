@@ -1,7 +1,7 @@
 export type RecipeCardType = {
   author: string;
   date: string;
-  email?: string;
+  email: string;
   favorite: boolean;
   image: string;
   instructions: string;
