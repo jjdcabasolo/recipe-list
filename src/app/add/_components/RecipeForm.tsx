@@ -48,7 +48,7 @@ export const RecipeForm = ({
 
     const isTitleExisting = recipeList.some((e) => e.title === data.title);
 
-    if (isTitleExisting) {
+    if (isTitleExisting && isAdd) {
       dispatch(
         setSnackbar({
           message: "Title should be unique",
